@@ -102,13 +102,20 @@ df_capacity = df['Hour'].groupby(df['Date']).value_counts() #number of rides per
 df_capacity.to_csv('hourly_capacity.csv')
 
 #Usage at different times of day
-df['Hour'].groupby(df['StartStation Id']).value_counts().to_csv('hourly_start_stations.csv')
-df['Hour'].groupby(df['EndStation Id']).value_counts().to_csv('hourly_end_stations.csv')
+#Average number of journeys started and ended at a station in 2017
+
+#df2017['Date'].groupby([df2017['StartStation Id'], df2017['Hour']]).value_counts().to_csv('start.csv')
+#df2017['Date'].groupby([df2017['EndStation Id'], df2017['Hour']]).value_counts().to_csv('end.csv')
+
+df2017['StartStation Id'].groupby(df2017['Hour']).value_counts().to_csv('hourly_start_stations.csv')
+df2017['EndStation Id'].groupby(df2017['Hour']).value_counts().to_csv('hourly_end_stations.csv')
 
 #Rides exceeding 30 minutes
 df_duration30 = df[df['Duration_Mins_Float']>30]
 df_duration30['Duration_Mins'].count().astype('float')/df['Duration_Mins_Float'].count().astype('float')
 
-
+#Save down clean dataset
+with open('boris_bike_data_clean.pickle', 'wb') as output:
+    pickle.dump(df, output)
 
 
