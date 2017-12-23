@@ -3,12 +3,13 @@
 import json
 import urllib2
 import pandas as pd
+import requests 
 
 url = 'http://cycling.data.tfl.gov.uk/cycling-load.json'
 data = json.load(urllib2.urlopen(url))
+df = pd.DataFrame.from_dict(data, orient='columns', dtype=None)
 
 #Extract urls from dict
-links = pd.DataFrame()
 links = pd.concat([df, pd.DataFrame((d for idx, d in df['entries'].iteritems()))], axis=1)
 del links['entries']
 links
@@ -25,8 +26,6 @@ urls_to_call = links['url_clean'].tolist()
 urls_to_call
 
 #Download files!
-import requests 
-
 for url in urls_to_call:
     filename = url[43:len(url)]
     r = requests.get(url)
