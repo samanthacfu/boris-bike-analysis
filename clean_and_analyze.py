@@ -1,23 +1,24 @@
 #Clean and analyze data
 
-#Load
+#Imports
 import pickle
+import numpy as np
+import datetime as dt
+import pandas as pd
+
+#Load dataset
 with open('boris_bike_data.pickle', 'rb') as data:
     df = pickle.load(data)
 
 #Check on obs w any missing values
-
 df_missing = df[df.isnull().any(axis=1)]
 df_missing.sample(5)
 
 #Check on obs with missing ids
-
 df_missing_id = df[df['End Station Id'].isnull()] 
 df_missing_id.sample(5)
 
 #Fix 2017 data with different variable names ugh
-
-import numpy as np
 df['Duration'] = np.where(df['Duration'].isnull(),df['Duration_Seconds'],df['Duration'])
 df['EndStation Id'] = np.where(df['EndStation Id'].isnull(),df['End Station Id'],df['EndStation Id'])
 df['StartStation Id'] = np.where(df['StartStation Id'].isnull(),df['Start Station Id'],df['StartStation Id'])
@@ -25,13 +26,10 @@ df['EndStation Name'] = np.where(df['EndStation Name'].isnull(),df['End Station 
 df['StartStation Name'] = np.where(df['StartStation Name'].isnull(),df['Start Station Name'],df['StartStation Name'])
 
 #Create start and end date years to explore messed up dates
-
-import datetime as dt
 df['Start Date Year'] = df['Start Date'].dt.year
 df['End Date Year'] = df['End Date'].dt.year
 
 #Create duration variable in minutes as a time delta
-import pandas as pd
 df['Duration_Mins'] = pd.to_timedelta(df['Duration']/60, unit='m')
 
 #Check on obs with weird start dates
@@ -47,7 +45,6 @@ df['Start Date Fixed'] = np.where((df['Start Date Year']==1900) | (df['Start Dat
 df['End Date Fixed'] = np.where((df['End Date Year']==2011) | (df['End Date Year']==1970),df['Start Date']+df['Duration_Mins'],df['End Date'])                                 
 
 #Double check that stuff was fixed!
-
 df['Start Date Fixed Year'] = df['Start Date Fixed'].dt.year
 df['End Date Fixed Year'] = df['End Date Fixed'].dt.year
 
@@ -57,7 +54,7 @@ df_weirdstartdates.describe()
 df_weirdenddates = df[(df['End Date Fixed Year']==2011) | (df[('End Date Fixed Year')]==1970)]
 df_weirdenddates.describe()
 
-#Drop obs with negative durations (~200k)
+#It wasn't, so drop obs with negative durations (~200k)
 df.drop(df[df['Duration'] < 0].index, inplace=True)
 
 #Drop obs with weird start AND end dates (26)
