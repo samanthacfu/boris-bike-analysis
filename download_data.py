@@ -1,4 +1,4 @@
-#Download 2017 boris bike data from TfL webpage (2012-2016 are available to download as zipped files)
+#Get list of links to download from TfL
 
 import json
 import urllib2
