@@ -10,6 +10,9 @@ import pandas as pd
 with open('boris_bike_data.pickle', 'rb') as data:
     df = pickle.load(data)
 
+df.dtypes
+df.describe()
+
 #Check on obs w any missing values
 df_missing = df[df.isnull().any(axis=1)]
 df_missing.sample(5)
@@ -68,6 +71,10 @@ df["Day"] = df["Start Date Fixed"].dt.dayofweek
 df["Time"] = df["Start Date Fixed"].dt.time
 df["Hour"] = df["Start Date Fixed"].dt.hour
 
+#Convert ids to numeric
+df['StartStation Id'] = pd.to_numeric(df['StartStation Id'], errors='coerce')
+df['EndStation Id'] = pd.to_numeric(df['EndStation Id'], errors='coerce')
+
 #Average weekly rides
 df["Week"].value_counts(sort=True).to_csv('weekly_rides.csv')
 
@@ -100,16 +107,42 @@ df_capacity.to_csv('hourly_capacity.csv')
 
 #Usage at different times of day
 #Average number of journeys started and ended at a station in 2017
-
-#df2017['Date'].groupby([df2017['StartStation Id'], df2017['Hour']]).value_counts().to_csv('start.csv')
-#df2017['Date'].groupby([df2017['EndStation Id'], df2017['Hour']]).value_counts().to_csv('end.csv')
-
 df2017['StartStation Id'].groupby(df2017['Hour']).value_counts().to_csv('hourly_start_stations.csv')
 df2017['EndStation Id'].groupby(df2017['Hour']).value_counts().to_csv('hourly_end_stations.csv')
+
+#Most common routes in 2017
+df2017_stations['Month'].groupby([df2017_stations['StartStation Id'],df2017_stations['EndStation Area']]).value_counts().to_csv("2017journeys.csv",header=True)
 
 #Rides exceeding 30 minutes
 df_duration30 = df[df['Duration_Mins_Float']>30]
 df_duration30['Duration_Mins'].count().astype('float')/df['Duration_Mins_Float'].count().astype('float')
+
+#Merge in station details
+file = '/Users/samanthafu/stations_clean.csv' 
+stations = pd.read_csv(file, skiprows=0)
+
+df_stations = pd.merge(df,
+      			stations[['area', 'borough']],
+                left_on=df['StartStation Id'], 
+                right_on=stations['id'],
+                how='left')
+
+df_stations.rename(columns={"area": "StartStation Area", "borough":"StartStation Borough"}, inplace=True)
+
+df_stations = pd.merge(df_stations,
+                 stations[['area', 'borough']],
+                 left_on=df_stations['EndStation Id'], 
+                 right_on=stations['id'],
+                 how='left')
+
+df_stations.rename(columns={"area": "EndStation Area", "borough":"EndStation Borough"}, inplace=True)
+
+#Get total monthly journeys to adjust for seasonality
+df['Month'].value_counts().to_csv("monthly_journeys.csv")
+
+#Start and ends by station
+df['Month'].groupby(df['StartStation Id']).value_counts().to_csv("journeys_starts.csv")
+df['Month'].groupby(df['EndStation Id']).value_counts().to_csv("journeys_ends.csv")
 
 #Save down clean dataset
 with open('boris_bike_data_clean.pickle', 'wb') as output:
