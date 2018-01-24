@@ -26,7 +26,7 @@ file = '/Users/samanthafu/stations.csv'
 df_annual = pd.read_csv(file, skiprows=0)
 
 #Gmaps in Bokeh requires a Google API key from https://developers.google.com/maps/documentation/javascript/get-api-key
-API_KEY = "AIzaSyDwcFI-fWLlqaLLm-vVomzJTzHej9QeW8Q"
+API_KEY = ""
 
 #Create animated hourly map
 
@@ -195,7 +195,7 @@ code = """
 """ % js_source_array
 
 callback = CustomJS(args=sources, code=code)
-slider = Slider(start=2010, end=2017, value=0, step=1, title="Year Installed",  callback=callback)
+slider = Slider(start=2010, end=2017, value=0, step=1, title="Year",  callback=callback)
 
 callback.args["renderer_source"] = renderer_source
 
