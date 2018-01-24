@@ -12,7 +12,7 @@ from bokeh.io import curdoc
 from bokeh.layouts import column, row, widgetbox
 
 #Gmaps in Bokeh requires a Google API key from https://developers.google.com/maps/documentation/javascript/get-api-key
-API_KEY = "AIzaSyDwcFI-fWLlqaLLm-vVomzJTzHej9QeW8Q"
+API_KEY = ""
 
 #Import station data
 file = '/Users/samanthafu/stations_clean.csv' 

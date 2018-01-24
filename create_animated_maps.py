@@ -15,6 +15,7 @@ from bokeh.models.mappers import CategoricalColorMapper
 from bokeh.palettes import Viridis
 from bokeh.layouts import column, row, widgetbox
 from bokeh.io import curdoc
+from bokeh.models.widgets import Toggle
 from bokeh.resources import INLINE
 
 #Import hourly data
@@ -153,7 +154,7 @@ plot.api_key = API_KEY
 sources = {}
 
 for x in range(2010, 2018):
-    newdf = df1[df1['year']<=x]
+    newdf = df_annual[df_annual['year']<=x]
     sources['_{0}'.format(x)] = ColumnDataSource(
         data=dict(
             lat=newdf.lat.tolist(),
