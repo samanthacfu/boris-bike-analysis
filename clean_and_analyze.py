@@ -75,10 +75,10 @@ df["Hour"] = df["Start Date Fixed"].dt.hour
 df['StartStation Id'] = pd.to_numeric(df['StartStation Id'], errors='coerce')
 df['EndStation Id'] = pd.to_numeric(df['EndStation Id'], errors='coerce')
 
-#Average weekly rides
-df["Week"].value_counts(sort=True).to_csv('weekly_rides.csv')
+#Weekly rides
+df["Week"].value_counts(sort=True).to_csv('weekly_rides.csv',header=True)
 
-#Average weekly riders
+#Weekly riders
 weekly_riders = df['Rental Id'].groupby(df['Week']).nunique()
 weekly_riders.to_csv('weekly_riders.csv')
 
@@ -90,11 +90,11 @@ df2017["Date"].value_counts().mean()
 df2017["Duration_Mins"].mean()
 
 #Most popular stations in 2017
-df2017["StartStation Id"].value_counts().to_csv('start_stations.csv')
-df2017["EndStation Id"].value_counts().to_csv('end_stations.csv')
+df2017["StartStation Id"].value_counts().to_csv('start_stations.csv',header=True)
+df2017["EndStation Id"].value_counts().to_csv('end_stations.csv',header=True)
 
 #Total rides by day of week
-df["Day"].value_counts(sort=True).to_csv('daily_rides.csv')
+df["Day"].value_counts(sort=True).to_csv('daily_rides.csv',header=True)
 
 #Convert timedelta to float to calculate groupby means 
 df['Duration_Mins_Float'] = df['Duration_Mins'].dt.total_seconds()/60
@@ -103,15 +103,15 @@ df["Duration_Mins_Float"].groupby(df["Day"]).mean().to_csv('daily_rides_duration
 
 #Capacity calculations: what % of bikes are out at any given time? 
 df_capacity = df['Hour'].groupby(df['Date']).value_counts() #number of rides per day per hour
-df_capacity.to_csv('hourly_capacity.csv')
+df_capacity['Hour'].mean().to_csv('hourly_capacity.csv',header=True)
 
 #Usage at different times of day
-#Average number of journeys started and ended at a station in 2017
+#Number of journeys started and ended at a station in 2017
 df2017['StartStation Id'].groupby(df2017['Hour']).value_counts().to_csv('hourly_start_stations.csv')
 df2017['EndStation Id'].groupby(df2017['Hour']).value_counts().to_csv('hourly_end_stations.csv')
 
 #Most common routes in 2017
-df2017_stations['Month'].groupby([df2017_stations['StartStation Id'],df2017_stations['EndStation Area']]).value_counts().to_csv("2017journeys.csv",header=True)
+df2017_stations['Month'].groupby([df2017_stations['StartStation Id'],df2017_stations['EndStation Id']]).value_counts().to_csv("2017journeys.csv",header=True)
 
 #Rides exceeding 30 minutes
 df_duration30 = df[df['Duration_Mins_Float']>30]
@@ -138,11 +138,11 @@ df_stations = pd.merge(df_stations,
 df_stations.rename(columns={"area": "EndStation Area", "borough":"EndStation Borough"}, inplace=True)
 
 #Get total monthly journeys to adjust for seasonality
-df['Month'].value_counts().to_csv("monthly_journeys.csv")
+df['Month'].value_counts().to_csv("monthly_journeys.csv",header=True)
 
 #Start and ends by station
-df['Month'].groupby(df['StartStation Id']).value_counts().to_csv("journeys_starts.csv")
-df['Month'].groupby(df['EndStation Id']).value_counts().to_csv("journeys_ends.csv")
+df['Month'].groupby(df['StartStation Id']).value_counts().to_csv("journeys_starts.csv",header=True)
+df['Month'].groupby(df['EndStation Id']).value_counts().to_csv("journeys_ends.csv",header=True)
 
 #Save down clean dataset
 with open('boris_bike_data_clean.pickle', 'wb') as output:
