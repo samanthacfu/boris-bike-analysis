@@ -1,10 +1,10 @@
-# Analysis of London's Bike Sharing Program</br>("Boris Bikes" / Santander Cycles)
+# Analyses of London's Bike Sharing Program</br>("Boris Bikes" / Santander Cycles)
 
 This repo contains some basic analyses of publicly available data on London's main bike sharing program, Boris Bikes. The data is part of Transport for London's Open Data initiative and can be found [here.](http://cycling.data.tfl.gov.uk/)
 
 ## Motivation
 I like biking! And bike-sharing initiatives!
-But mostly these analyses were an attempt at data journalism on the future of bike-sharing, published [here](http://publicspherejournal.com/2018/01/bike-sharing-the-future-of-urban-transportation/).
+But mostly these analyses were an attempt at data journalism for an article on the future of bike-sharing, which can be found [here](http://publicspherejournal.com/2018/01/bike-sharing-the-future-of-urban-transportation/).
 
 ## Description
 - download_data
