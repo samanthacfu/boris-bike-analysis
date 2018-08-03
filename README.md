@@ -1,4 +1,4 @@
-# Analysis of Data from London's Bike Sharing Program
+# Analysis of trip data from London's bike sharing program
 
 This repo contains some basic analyses of publicly available data on London's main bike sharing program, Boris Bikes. The data is part of Transport for London's Open Data initiative and can be found [here.](http://cycling.data.tfl.gov.uk/)
 
